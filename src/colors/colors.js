@@ -39,15 +39,18 @@ const palette = {
 }
 
 
-String.prototype.rgb = function(r, g, b) {
+String.prototype.rgb = function(r, g, b, bg=false) {
+    if(bg) return `\x1b[48;2;${r};${g};${b}m${this}\x1b[0m`
     return `\x1b[38;2;${r};${g};${b}m${this}\x1b[0m`
 }
 
-String.prototype.hex = function(hex) {
+String.prototype.hex = function(hex, bg=false) {
     let split_hex = hex.match(/.{1,2}/g)
     let r = parseInt(split_hex[0], 16)
     let g = parseInt(split_hex[1], 16)
     let b = parseInt(split_hex[2], 16)
+
+    if(bg) return `\x1b[48;2;${r};${g};${b}m${this}\x1b[0m`
     return `\x1b[38;2;${r};${g};${b}m${this}\x1b[0m`
 }
 
