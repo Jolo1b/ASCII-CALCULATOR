@@ -40,13 +40,7 @@ const palette = {
 
 
 String.prototype.rgb = function(r, g, b, bg=false) { 
-    let id
- 
-    if (bg) id = "48"
-    else id = "38"
-
-    if(this.substring(this.length - 4) === "\x1b[0m") 
-        return `\x1b[${id};2;${r};${g};${b}m${this}`
+    const id = bg ? "48" : "38"
     return `\x1b[${id};2;${r};${g};${b}m${this}\x1b[0m`
 }
 
