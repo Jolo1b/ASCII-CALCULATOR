@@ -39,6 +39,11 @@ class Widget extends EventEmitter {
         return this
     }
 
+    add_event_listener(event, callback) {
+        this.on(event, callback)
+        return this
+    }
+
     draw() {
         for(let i = 0; i < this.height; i++) {
             for(let j = 0; j < this.width; j++)
@@ -63,7 +68,7 @@ process.new_window = () => {
 
 const set_title = (title) => process.title = title
 const clear_window = () => process.stdout.write("\x1bc")
-const text = (text, x, y) => process.stdout.write(`\x1b[${x};${y}H${text}`)
+const text = (text, x, y) => process.stdout.write(`\x1b[${y};${x}H${text}`)
 const straight_line = (ch ,x, y, length) => process.stdout.write(`\x1b[${y};${x}H${ch.repeat(length)}`)
 const cursor_to = (x, y) => process.stdout.write(`\x1b[${y};${x}H`)
 
