@@ -4,7 +4,7 @@ const { palette } = require("./colors.js")
 class Widget extends EventEmitter {
     constructor(text, x, y, 
         width=text.length, height=1, 
-        bg=palette.BLUE,
+        bg=palette.BLUE, tc=palette.WHITE
     ) 
     {
         super()
@@ -15,6 +15,7 @@ class Widget extends EventEmitter {
         this.width = width
         this.height = height
         this.bg = bg
+        this.tc = tc
     }
 
     set_position(x, y) {
@@ -34,6 +35,11 @@ class Widget extends EventEmitter {
         return this
     }
 
+    set_text_color(tc) {
+        this.tc = tc
+        return this
+    }
+
     set_background(bg) {
         this.bg = bg
         return this
@@ -45,14 +51,18 @@ class Widget extends EventEmitter {
     }
 
     draw() {
+        const str_length = this.text.replace(/[\x00-\x1F\x7F-\x9F]/g, "").length
+
         for(let i = 0; i < this.height; i++) {
             for(let j = 0; j < this.width; j++)
                 process.stdout.write(`\x1b[${this.y + i};${this.x + j}H `.hex(this.bg, bg=true))
         }
 
-        let text_x_position = this.x + Math.floor(this.width / 2) - Math.floor(this.text.length / 2)
+        let text_x_position = this.x + Math.floor(this.width / 2) - Math.floor(str_length / 2)
         let text_y_position = this.y + Math.floor(this.height / 2)
-        process.stdout.write(`\x1b[${text_y_position};${text_x_position}H${this.text}`.hex(this.bg, bg=true))
+        process.stdout.write(`\x1b[${text_y_position};${text_x_position}H${this.text}`
+            .hex(this.bg, bg=true)
+            .hex(this.tc))
     }
 }
 

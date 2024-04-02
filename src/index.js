@@ -2,15 +2,21 @@ const { text, set_title, straight_line, Widget, clear_window } = require("./colo
 const { palette } = require("./colors/colors.js")
 const readline = require("readline")
 
-clear_window()
-set_title("ASCII─CALCULATOR")
-
+let title = "ASCII-CALCULATOR"
 let width = process.stdout.columns
 let height = process.stdout.rows
 
+process.new_window()
+clear_window()
+set_title(title)
+
 // draw the UI
 straight_line("─", 1, 1, width)
-text("ASCII-CALCULATOR", 2, 1)
+text(title, 2, 1)
+
+const help_msg = "[PRESS CTRL+C TO QUIT]"
+text(help_msg, width - help_msg.length, 1)
+
 let calculator_display = new Widget("", 1, 2, bg=null)
 calculator_display.set_size(width, 1)  
 calculator_display.draw()
@@ -49,16 +55,15 @@ for(let i = 0;i < buttons.length;i++){
         if(!buttons[i][j]) break
         buttons[i][j].set_background(palette.GREEN)
             .set_size(3, 3)
+            .set_text_color(palette.BLACK)
             .set_position(x_pos, (i + 1) * 4)
             .draw()
 
         buttons[i][j].on("click", (button, calculator_display) => {
             button.set_background(palette.ORANGE).draw()
-            setTimeout(() => button.set_background(palette.GREEN).draw(), 100)
             
             let text = calculator_display.text
             let button_text = button.text
-            if(text.length >= width - 2 && button_text != "del" | "=" ) return
             
             if(button_text == "C") {
                 calculator_display.set_text("").draw() 
@@ -66,20 +71,52 @@ for(let i = 0;i < buttons.length;i++){
             }
                 
             if(button_text == "del") {
-                calculator_display.set_text(text.pop()).draw()
+                if(text == "") return
+                calculator_display.set_text(text.slice(0, -1)).draw()
                 return
-            }
+            } 
+        
+            calculator_display.set_text(text + button_text).draw()
         })
         x_pos += 5
     }
     x_pos = 1
 }
+buttons[0][0].set_background(palette.RED).draw()
 
 const rl = readline.createInterface({ 
     input: process.stdin,
     terminal: true 
 })
 
+let input_handler = {
+    x: 0,
+    y: 0,
+    handle: (str, key, buttons) => {
+        buttons[input_handler.y][input_handler.x].set_background(palette.GREEN).draw()
+
+        if(key.name === "return") {
+            buttons[input_handler.y][input_handler.x]
+                .emit("click", buttons[input_handler.y][input_handler.x], calculator_display)
+            return
+        }
+
+        if(key.name === "up") input_handler.y--
+        if(key.name === "down") input_handler.y++
+        if(key.name === "left") input_handler.x--
+        if(key.name === "right") input_handler.x++
+
+        if(input_handler.y < 0) input_handler.y++ 
+        if(input_handler.x < 0) input_handler.x++ 
+        if(input_handler.y >= buttons.length - 1) 
+        input_handler.y = buttons.length - 1
+        if(input_handler.x >= buttons[input_handler.y].length) 
+            input_handler.x = buttons[input_handler.y].length - 1 
+
+        buttons[input_handler.y][input_handler.x].set_background(palette.RED).draw()
+    }
+}
+
 rl.input.on("keypress", (str, key) => {
-    buttons[0][3].emit("click", buttons[0][3], calculator_display)
+    input_handler.handle(str, key, buttons)
 })
