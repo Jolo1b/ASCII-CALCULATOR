@@ -45,6 +45,7 @@ String.prototype.rgb = function(r, g, b, bg=false) {
 }
 
 String.prototype.hex = function(hex, bg=false) {
+    if(hex === null) return
     let split_hex = hex.match(/.{1,2}/g)
     let r = parseInt(split_hex[0], 16)
     let g = parseInt(split_hex[1], 16)
@@ -52,6 +53,18 @@ String.prototype.hex = function(hex, bg=false) {
 
     if(bg) return `\x1b[48;2;${r};${g};${b}m${this}\x1b[0m`
     return `\x1b[38;2;${r};${g};${b}m${this}\x1b[0m`
+}
+
+String.prototype._underline = function() {
+    return `\x1b[4m${this}\x1b[0m`
+}
+
+String.prototype._bold = function() {
+    return `\x1b[1m${this}\x1b[0m`
+}
+
+String.prototype._italic = function() {
+    return `\x1b[3m${this}\x1b[0m`
 }
 
 module.exports = { palette }

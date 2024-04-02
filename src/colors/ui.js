@@ -4,7 +4,7 @@ const { palette } = require("./colors.js")
 class Widget extends EventEmitter {
     constructor(text, x, y, 
         width=text.length, height=1, 
-        bg=palette.WHITE, fg=palette.BLACK
+        bg=palette.BLUE,
     ) 
     {
         super()
@@ -15,7 +15,6 @@ class Widget extends EventEmitter {
         this.width = width
         this.height = height
         this.bg = bg
-        this.fg = fg
     }
 
     set_position(x, y) {

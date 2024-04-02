@@ -1,20 +1,22 @@
-const { text, set_title, new_window, Widget } = require("./colors/ui.js")
+const { text, set_title, straight_line, Widget } = require("./colors/ui.js")
 const { palette } = require("./colors/colors.js")
 
+process.new_window()
 set_title("ASCII-CALCULATOR")
-text("Hello There", 1, 1)
+
+let width = process.stdout.columns
+let height = process.stdout.rows
+let center_x = Math.floor(width / 2)
+
+straight_line("─", 1, 1, width)
+let input_box = new Widget("", 1, 2, bg=null)
+    .set_size(width - 2, 1)
+    .draw()
+straight_line("─", 1, 1, width)
 
 
-const button = new Widget("Click Me", 1, 3, bg=palette.BLUE)
-button.set_size(20, 3)
-button.draw()
-button.on("click", () => {
-    button.set_text("Clicked")
-    button.draw()
-})
 
 
 process.stdin.on("data", (data) => {
-    button.emit("click")
     process.exit()
 })
