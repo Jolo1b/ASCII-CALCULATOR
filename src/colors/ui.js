@@ -31,6 +31,8 @@ class Widget extends EventEmitter {
     }
 
     set_text(text) {
+        if(typeof(text) != "string") throw new Error(
+            "'set_text' text must be a string")
         this.text = text
         return this
     }
@@ -51,7 +53,7 @@ class Widget extends EventEmitter {
     }
 
     draw() {
-        const str_length = this.text.replace(/[\x00-\x1F\x7F-\x9F]/g, "").length
+        const str_length = this.text.length
 
         for(let i = 0; i < this.height; i++) {
             for(let j = 0; j < this.width; j++)
@@ -63,6 +65,8 @@ class Widget extends EventEmitter {
         process.stdout.write(`\x1b[${text_y_position};${text_x_position}H${this.text}`
             .hex(this.bg, bg=true)
             .hex(this.tc))
+
+        return this
     }
 }
 
