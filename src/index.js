@@ -3,7 +3,8 @@ const { palette } = require("./colors/colors.js")
 const readline = require("readline")
 const os = require("os")
 
-let title = "ASCII-CALCULATOR"
+let title = "ASCII\u2500CALCULATOR"
+const help_msg = "[PRESS CTRL+C TO QUIT]"
 let width = process.stdout.columns
 let height = process.stdout.rows
 
@@ -21,10 +22,8 @@ process.new_window()
 set_title(title)
 
 // draw the UI
-straight_line("─", 1, 1, width)
+straight_line("\u2500", 1, 1, width)
 text(title, 2, 1)
-
-const help_msg = "[PRESS CTRL+C TO QUIT]"
 text(help_msg, width - help_msg.length, 1)
 
 let calculator_display = new Widget("", 1, 2, bg=null)
@@ -33,7 +32,7 @@ calculator_display
     .set_text_color(display_base_color)
     .set_background(display_background_color)
     .draw()
-straight_line("─", 1, 3, width)
+straight_line("\u2500", 1, 3, width)
 
 let buttons = [
     [
